@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.utfpr.td.tsi.projeto_delegacia.exceptions.VeiculoNotFoundException;
+import br.edu.utfpr.td.tsi.projeto_delegacia.filters.IVeiculoFilter;
 import br.edu.utfpr.td.tsi.projeto_delegacia.models.Veiculo;
 import br.edu.utfpr.td.tsi.projeto_delegacia.repositories.IVeiculoRepository;
+import br.edu.utfpr.td.tsi.projeto_delegacia.validators.IValidator;
 
 @Service
 public class VeiculoServiceImpl implements IVeiculoService {

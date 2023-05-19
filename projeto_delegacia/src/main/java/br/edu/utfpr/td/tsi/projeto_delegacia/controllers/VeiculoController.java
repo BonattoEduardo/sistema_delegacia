@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.utfpr.td.tsi.projeto_delegacia.filters.IVeiculoFilter;
+import br.edu.utfpr.td.tsi.projeto_delegacia.filters.VeiculoFilterImpl;
 import br.edu.utfpr.td.tsi.projeto_delegacia.models.TipoVeiculo;
 import br.edu.utfpr.td.tsi.projeto_delegacia.models.Veiculo;
-import br.edu.utfpr.td.tsi.projeto_delegacia.services.IVeiculoFilter;
 import br.edu.utfpr.td.tsi.projeto_delegacia.services.IVeiculoService;
-import br.edu.utfpr.td.tsi.projeto_delegacia.services.VeiculoFilterImpl;
 
 @RestController
 @RequestMapping("/veiculos")

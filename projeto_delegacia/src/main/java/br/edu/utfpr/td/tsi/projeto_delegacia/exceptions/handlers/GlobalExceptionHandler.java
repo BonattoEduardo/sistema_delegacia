@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
         ResponseStatus responseStatus = e.getClass().getAnnotation(ResponseStatus.class);
-        
+
         if (responseStatus != null) {
             status = responseStatus.value();
         }
@@ -38,11 +38,11 @@ public class GlobalExceptionHandler {
         HttpMessageNotReadableException e, WebRequest request
     ) {
 
-        String message = "Erro esquisito: " + e.getCause().getClass().getName();
+        String message = "Erro: " + e.getCause().getClass().getName();
         Throwable cause = e.getCause();
 
         if (cause instanceof InvalidFormatException) {
-            message = "JSON mal formatado: " + ((InvalidFormatException) cause).getTargetType().getSimpleName();
+            message = "Formato JSON incorreto: " + ((InvalidFormatException) cause).getTargetType().getSimpleName();
         }
 
         BaseErrorResponse baseErrorResponse = new BaseErrorResponse(HttpStatus.BAD_REQUEST, message);

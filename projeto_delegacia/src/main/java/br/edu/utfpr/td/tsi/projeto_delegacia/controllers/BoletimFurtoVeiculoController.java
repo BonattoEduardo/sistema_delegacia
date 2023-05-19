@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.utfpr.td.tsi.projeto_delegacia.dtos.BoletimFurtoVeiculoDTO;
+import br.edu.utfpr.td.tsi.projeto_delegacia.dtos.BoletimFurtoVeiculoReadDTO;
+import br.edu.utfpr.td.tsi.projeto_delegacia.filters.BoletimFilterImpl;
+import br.edu.utfpr.td.tsi.projeto_delegacia.filters.IBoletimFilter;
 import br.edu.utfpr.td.tsi.projeto_delegacia.models.BoletimFurtoVeiculo;
 import br.edu.utfpr.td.tsi.projeto_delegacia.models.PeriodoOcorrencia;
 import br.edu.utfpr.td.tsi.projeto_delegacia.models.Veiculo;
-import br.edu.utfpr.td.tsi.projeto_delegacia.services.BoletimFilterImpl;
-import br.edu.utfpr.td.tsi.projeto_delegacia.services.IBoletimFilter;
 import br.edu.utfpr.td.tsi.projeto_delegacia.services.IBoletimFurtoVeiculoService;
 import br.edu.utfpr.td.tsi.projeto_delegacia.services.IVeiculoService;
 
@@ -31,32 +32,31 @@ public class BoletimFurtoVeiculoController {
 
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private IBoletimFurtoVeiculoService boletimFurtoVeiculoService;
     @Autowired
     private IVeiculoService veiculoService;
 
     @GetMapping
-    public List<BoletimFurtoVeiculoDTO> listBoletins(
+    public List<BoletimFurtoVeiculoReadDTO> listBoletins(
         @RequestParam(name = "cidade", required = false) String cidade,
         @RequestParam(name = "periodo", required = false) PeriodoOcorrencia periodo 
     ) {
         if (cidade == null && periodo == null) {
             return boletimFurtoVeiculoService.listBoletins().stream()
-                .map(this::convertToDTO)
+                .map(this::convertToReadDTO)
                 .toList();
         }
 
         IBoletimFilter filter = new BoletimFilterImpl(cidade, periodo);
         return boletimFurtoVeiculoService.listBoletins(filter).stream()
-            .map(this::convertToDTO)
+            .map(this::convertToReadDTO)
             .toList();
     }
 
     @GetMapping("/{id}")
-    public BoletimFurtoVeiculoDTO buscarBoletimPorId(@PathVariable("id") String idBoletimFurtoVeiculo) {
-        return convertToDTO(boletimFurtoVeiculoService.readBoletim(idBoletimFurtoVeiculo));
+    public BoletimFurtoVeiculoReadDTO buscarBoletimPorId(@PathVariable("id") String idBoletimFurtoVeiculo) {
+        return convertToReadDTO(boletimFurtoVeiculoService.readBoletim(idBoletimFurtoVeiculo));
     }
 
     @PostMapping("/")
@@ -98,12 +98,12 @@ public class BoletimFurtoVeiculoController {
         boletimFurtoVeiculoService.deleteBoletim(idBoletimFurtoVeiculo);
     }
 
-    private BoletimFurtoVeiculoDTO convertToDTO(BoletimFurtoVeiculo boletim) {
-        BoletimFurtoVeiculoDTO boletimDTO = modelMapper.map(boletim, BoletimFurtoVeiculoDTO.class);
+    private BoletimFurtoVeiculoReadDTO convertToReadDTO(BoletimFurtoVeiculo boletim) {
+        BoletimFurtoVeiculoReadDTO boletimListDTO = modelMapper.map(boletim, BoletimFurtoVeiculoReadDTO.class);
 
         Veiculo veiculo = veiculoService.readVeiculo(boletim.getIdVeiculoFurtado());
-        boletimDTO.setVeiculoFurtado(veiculo);
+        boletimListDTO.setVeiculoFurtado(veiculo);
 
-        return boletimDTO;
+        return boletimListDTO;
     }
 }

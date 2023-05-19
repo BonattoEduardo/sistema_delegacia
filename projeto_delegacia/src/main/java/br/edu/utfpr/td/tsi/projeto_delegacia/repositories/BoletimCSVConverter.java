@@ -1,7 +1,8 @@
 package br.edu.utfpr.td.tsi.projeto_delegacia.repositories;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -27,9 +28,10 @@ import br.edu.utfpr.td.tsi.projeto_delegacia.models.Veiculo;
 @Component
 public class BoletimCSVConverter implements ICSVConverter<BoletimFurtoVeiculoDTO> {
 
-    public List<BoletimFurtoVeiculoDTO> convertFile(String csvFile) throws IOException, ParseException, CsvException {
+    public List<BoletimFurtoVeiculoDTO> convertFileStream(InputStream csvStream)
+            throws IOException, ParseException, CsvException {
 
-        List<String[]> lines = readFile(csvFile);
+        List<String[]> lines = readFile(csvStream);
 
         List<BoletimFurtoVeiculoDTO> boletins = new ArrayList<>();
 
@@ -41,13 +43,13 @@ public class BoletimCSVConverter implements ICSVConverter<BoletimFurtoVeiculoDTO
         return boletins;
     }
 
-    private List<String[]> readFile(String csvFile) throws IOException, ParseException, CsvException {
+    private List<String[]> readFile(InputStream csvStream) throws IOException, ParseException, CsvException {
 
         CSVParser csvParser = new CSVParserBuilder()
             .withSeparator('\t')
             .build();
 
-        CSVReader reader = new CSVReaderBuilder(new FileReader(csvFile))
+        CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvStream))
             .withCSVParser(csvParser)
             .build();
 

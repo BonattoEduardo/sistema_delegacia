@@ -1,7 +1,7 @@
 package br.edu.utfpr.td.tsi.projeto_delegacia.repositories;
 
+import br.edu.utfpr.td.tsi.projeto_delegacia.filters.IBoletimFilter;
 import br.edu.utfpr.td.tsi.projeto_delegacia.models.BoletimFurtoVeiculo;
-import br.edu.utfpr.td.tsi.projeto_delegacia.services.IBoletimFilter;
 import br.edu.utfpr.td.tsi.projeto_delegacia.utils.FilterUtils;
 
 import java.util.List;
@@ -38,14 +38,16 @@ public class InMemoryBoletimFurtoVeiculoRepository
 
     private boolean matchesCidade(BoletimFurtoVeiculo boletim, IBoletimFilter filter) {
         return (
-            filter.getCidade() != null &&
+            filter.getCidade() == null ||
+            boletim.getLocalOcorrencia() != null &&
             FilterUtils.compare(boletim.getLocalOcorrencia().getCidade(), filter.getCidade())
         );
     }
 
     private boolean matchesPeriodoOcorrencia(BoletimFurtoVeiculo boletim, IBoletimFilter filter) {
         return (
-            filter.getPeriodoOcorrencia() != null &&
+            filter.getPeriodoOcorrencia() == null ||
+            boletim.getPeriodoOcorrencia() != null &&
             FilterUtils.compare(
                 boletim.getPeriodoOcorrencia().getDescription(),
                 filter.getPeriodoOcorrencia().getDescription())
@@ -53,6 +55,6 @@ public class InMemoryBoletimFurtoVeiculoRepository
     }
 
     private boolean matchesFilter(BoletimFurtoVeiculo boletim, IBoletimFilter filter) {
-        return matchesCidade(boletim, filter) || matchesPeriodoOcorrencia(boletim, filter);
+        return matchesCidade(boletim, filter) && matchesPeriodoOcorrencia(boletim, filter);
     }
 }
